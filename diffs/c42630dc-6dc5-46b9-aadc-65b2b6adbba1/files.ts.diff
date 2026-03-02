@@ -100,13 +100,7 @@
  
        if (!message) {
          // Delete uploaded file
--        fs.unlinkSync(file.path);
-+        const resolvedPath = path.resolve(file.path);
-+        const expectedDir = path.resolve(process.cwd()); // TODO: Change this to your expected directory
-+        if (!resolvedPath.startsWith(expectedDir)) {
-+            throw new Error('Invalid file path');
-+        }
-+        fs.unlinkSync(resolvedPath);
+         fs.unlinkSync(file.path);
          res.status(404).json({ error: 'Message not found' });
          return;
        }
@@ -118,7 +112,13 @@
        });
  
        if (!membership) {
-         fs.unlinkSync(file.path);
+-        fs.unlinkSync(file.path);
++        const resolvedPath = path.resolve(file.path);
++        const expectedDir = path.resolve(process.cwd()); // TODO: Change this to your expected directory
++        if (!resolvedPath.startsWith(expectedDir)) {
++            throw new Error('Invalid file path');
++        }
++        fs.unlinkSync(resolvedPath);
          res.status(403).json({ error: 'You must be a member of the channel' });
          return;
        }
